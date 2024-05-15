@@ -1,0 +1,32 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname list-from-to) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+;; Natural is one of:
+;; - 0
+;; - (add1 Natural)
+;; interp. a natural number
+(define N0 0)           ;0
+(define N1 (add1 N0))   ;1
+(define N2 (add1 N1))   ;2
+
+#; 
+(define (fn-for-natural n)
+  (cond [(zero? n)(...)]
+        [else
+         (... n
+              (fn-for-natural (sub1 n)))]))
+
+;; Natural > ListOfNatural
+;; given n and a, n >= a, produce the list (cons n (cons n-1 ... (cons a empty)))
+(check-expect (list-from-to 1 0) (cons 1 (cons 0 empty)))
+(check-expect (list-from-to 3 0) (cons 3 (cons 2 (cons 1 (cons 0 empty)))))
+(check-expect (list-from-to 10 7) (cons 10 (cons 9 (cons 8 (cons 7 empty)))))
+(check-expect (list-from-to 5 5) (cons 5 empty))
+
+;(define (list-from-to from to) empty) ;stub
+
+(define (list-from-to from to)
+  (cond [(< from to) empty]
+        [else
+         (cons from
+               (list-from-to (sub1 from) to))]))
