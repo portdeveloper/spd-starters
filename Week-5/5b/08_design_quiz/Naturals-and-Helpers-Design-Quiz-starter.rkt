@@ -1,10 +1,13 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname Naturals-and-Helpers-Design-Quiz-starter) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 (require 2htdp/image)
 ;; SPD2-Design-Quiz-1.rkt
 
 
 ;; ======================================================================
 ;; Constants
-(define COOKIES .)
+(define TRI (triangle 20 "solid" "red"))
 
 ;; ======================================================================
 ;; Data Definitions
@@ -46,17 +49,30 @@
 
 ;; Natural Image -> Image
 ;; produce an n-wide pyramid of the given image
-(check-expect (pyramid 0 COOKIES) empty-image)
-(check-expect (pyramid 1 COOKIES) COOKIES)
-(check-expect (pyramid 3 COOKIES)
-              (above COOKIES
-                     (beside COOKIES COOKIES)
-                     (beside COOKIES COOKIES COOKIES)))
+(check-expect (pyramid 0 TRI) empty-image)
+(check-expect (pyramid 1 TRI) TRI)
+(check-expect (pyramid 3 TRI)
+              (above TRI
+                     (beside TRI TRI)
+                     (beside TRI TRI TRI)))
 
-(define (pyramid n i) empty-image) ; stub
+;(define (pyramid n i) empty-image) ; stub
+
+(define (pyramid n img)
+  (cond [(zero? n) empty-image]
+        [else
+         (above   
+                (pyramid (sub1 n) img)
+                (one-line n img) )]))
+
+(define (one-line n img)
+  (cond [(zero? n) empty-image]
+        [else
+         (beside img  
+                 (one-line (sub1 n) img))]))
 
 
-
+ 
 ; Problem 2:
 ; Consider a test tube filled with solid blobs and bubbles.  Over time the
 ; solids sink to the bottom of the test tube, and as a consequence the bubbles
@@ -125,4 +141,13 @@
                                 (cons "bubble" (cons "bubble" empty)))))
               (cons "bubble" (cons "solid"
                                    (cons "solid" (cons "bubble" empty)))))
-(define (sink lob) empty) ; stub
+;(define (sink lob) empty) ; stub
+
+
+(define (sink lob)
+  (cond [(empty? lob) empty]
+        [else
+         (if (fn-for-blob (first lob))
+              (sink (rest lob)))]))
+
+
