@@ -61,15 +61,13 @@
 (define (pyramid n img)
   (cond [(zero? n) empty-image]
         [else
-         (above   
-                (pyramid (sub1 n) img)
-                (one-line n img) )]))
+         (above (pyramid (sub1 n) img) (one-line n img))]))
+
 
 (define (one-line n img)
   (cond [(zero? n) empty-image]
         [else
-         (beside img  
-                 (one-line (sub1 n) img))]))
+         (beside img (one-line (sub1 n) img))])) 
 
 
  
@@ -107,6 +105,7 @@
 ;; interp. a sequence of blobs in a test tube, listed from top to bottom.
 (define LOB0 empty) ; empty test tube
 (define LOB2 (cons "solid" (cons "bubble" empty))) ; solid blob above a bubble
+(define LOB3 (cons "solid" (cons "solid" (cons "bubble" empty))))
 
 #;
 (define (fn-for-lob lob)
@@ -128,26 +127,47 @@
 (check-expect (sink empty) empty)
 (check-expect (sink (cons "bubble" (cons "solid" (cons "bubble" empty))))
               (cons "bubble" (cons "bubble" (cons "solid" empty))))
+
 (check-expect (sink (cons "solid" (cons "solid" (cons "bubble" empty))))
               (cons "bubble" (cons "solid" (cons "solid" empty))))
+
 (check-expect (sink (cons "solid" (cons "bubble" (cons "bubble" empty))))
-              (cons "bubble" (cons "solid" (cons "bubble" empty))))
+              (cons "bubble" (cons "solid" (cons "bubble" empty)))) 
 (check-expect (sink (cons "solid" (cons "bubble" (cons "solid" empty))))
               (cons "bubble" (cons "solid" (cons "solid" empty))))
 (check-expect (sink (cons "bubble" (cons "solid" (cons "solid" empty))))
               (cons "bubble" (cons "solid" (cons "solid" empty))))
 (check-expect (sink (cons "solid"
                           (cons "solid"
-                                (cons "bubble" (cons "bubble" empty)))))
+                                (cons "bubble" (cons "bubble" empty))))) 
               (cons "bubble" (cons "solid"
                                    (cons "solid" (cons "bubble" empty)))))
 ;(define (sink lob) empty) ; stub
-
-
+ 
 (define (sink lob)
   (cond [(empty? lob) empty]
+        [(empty? (rest lob)) lob]
         [else
-         (if (fn-for-blob (first lob))
-              (sink (rest lob)))]))
+         (helper (first lob) (rest lob))]))
 
 
+;; Blob ListOfBlob -> ListOfBlob
+;; helper function
+;; ASSUMES that lob has at least 1 element
+(check-expect (helper "bubble" (cons "solid" empty))
+              (cons "bubble" (cons "solid" empty)))
+(check-expect (helper "solid" (cons "bubble" empty))
+              (cons "bubble" (cons "solid" empty)))
+(check-expect (helper "solid" (cons "bubble" (cons "bubble" empty)))
+              (cons "bubble" (cons "solid" (cons "bubble" empty))))
+
+
+(define (helper b lob)
+  (cond [(string=? b "bubble") (cons b lob)]
+        [
+        
+
+
+
+ 
+ 
